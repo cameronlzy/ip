@@ -11,7 +11,10 @@ public class Rex {
         line();
         System.out.println("     Got it. I've added this task:");
         System.out.println("       " + t);
-        System.out.println("     Now you have " + tasks.size() + " tasks in the list.");
+        System.out.println("     Now you have "
+                + tasks.size()
+                + (tasks.size() > 1 ? " tasks" : " task")
+                + " in the list.");
         line();
     }
 
@@ -35,6 +38,17 @@ public class Rex {
         line();
     }
 
+    private static void okDeleted(List<Task> tasks, Task t) {
+        line();
+        System.out.println("     Noted. I've removed this task:");
+        System.out.println("       " + t);
+        System.out.println("     Now you have "
+                + tasks.size()
+                + (tasks.size() > 1 ? " tasks" : " task")
+                + " in the list.");
+        line();
+    }
+
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         List<Task> tasks = new ArrayList<>();
@@ -54,6 +68,15 @@ public class Rex {
                 break;
             } else if (input.equalsIgnoreCase("list")) {
                 list(tasks);
+            } else if (input.startsWith("delete ")) {
+                try {
+                    int idx = Integer.parseInt(input.substring(6).trim()) - 1;
+                    Task t = tasks.get(idx);
+                    tasks.remove(idx);
+                    okDeleted(tasks, t);
+                } catch (Exception e) {
+                    System.out.println("Invalid task number for delete.");
+                }
             } else if (input.startsWith("mark ")) {
                 try {
                     int idx = Integer.parseInt(input.substring(5).trim()) - 1;
