@@ -1,9 +1,15 @@
+enum TaskType {
+    TODO, DEADLINE, EVENT
+}
+
 abstract class Task {
     protected String description;
     protected boolean isDone;
+    protected TaskType type;
 
-    public Task(String description) {
+    public Task(String description, TaskType type) {
         this.description = description;
+        this.type = type;
         this.isDone = false;
     }
 
@@ -11,10 +17,9 @@ abstract class Task {
     public void markUndone() { this.isDone = false; }
 
     protected String status() { return isDone ? "[X]" : "[ ]"; }
-    protected abstract String type();
 
     @Override
     public String toString() {
-        return "[" + type() + "]" + status() + " " + description;
+        return "[" + type.name().charAt(0) + "]" + status() + " " + description;
     }
 }

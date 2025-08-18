@@ -1,5 +1,5 @@
-
 class Todo extends Task {
-    public Todo(String description) { super(description); }
-    @Override protected String type() { return "T"; }
+    public Todo(String description) {
+        super(description, TaskType.TODO);
+    }
 }
