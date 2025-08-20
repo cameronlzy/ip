@@ -1,38 +1,23 @@
 #!/usr/bin/env bash
+set -e
 
-# create bin directory if it doesn't exist
-if [ ! -d "../bin" ]
-then
-    mkdir ../bin
+mkdir -p ../bin
+rm -f ACTUAL.TXT ACTUAL-UNIX.TXT EXPECTED-UNIX.TXT
+
+if ! find ../src/main/java -name "*.java" -print0 | xargs -0 javac -cp ../src/main/java -Xlint:none -d ../bin; then
+  echo "********** BUILD FAILURE **********"
+  exit 1
 fi
 
-# delete output from previous run
-if [ -e "./ACTUAL.TXT" ]
-then
-    rm ACTUAL.TXT
-fi
+java -classpath ../bin Rex < input.txt > ACTUAL.TXT
 
-# compile the code into the bin folder, terminates if error occurred
-if ! javac -cp ../src/main/java -Xlint:none -d ../bin ../src/main/java/*.java
-then
-    echo "********** BUILD FAILURE **********"
-    exit 1
-fi
+awk '{sub(/\r$/,""); print}' EXPECTED.TXT > EXPECTED-UNIX.TXT
+awk '{sub(/\r$/,""); print}' ACTUAL.TXT > ACTUAL-UNIX.TXT
 
-# run the program, feed commands from input.txt file and redirect the output to the ACTUAL.TXT
-java -classpath ../bin Duke < input.txt > ACTUAL.TXT
-
-# convert to UNIX format
-cp EXPECTED.TXT EXPECTED-UNIX.TXT
-dos2unix ACTUAL.TXT EXPECTED-UNIX.TXT
-
-# compare the output to the expected output
-diff ACTUAL.TXT EXPECTED-UNIX.TXT
-if [ $? -eq 0 ]
-then
-    echo "Test result: PASSED"
-    exit 0
+if diff -u ACTUAL-UNIX.TXT EXPECTED-UNIX.TXT; then
+  echo "Test result: PASSED"
+  exit 0
 else
-    echo "Test result: FAILED"
-    exit 1
+  echo "Test result: FAILED"
+  exit 1
 fi
