@@ -13,7 +13,7 @@ java -classpath ../bin Rex < input.txt > ACTUAL.TXT
 
 awk '{sub(/\r$/,""); print}' EXPECTED.TXT > EXPECTED-UNIX.TXT
 awk '{sub(/\r$/,""); print}' ACTUAL.TXT > ACTUAL-UNIX.TXT
-
+# Additional Tests
 if diff -u ACTUAL-UNIX.TXT EXPECTED-UNIX.TXT; then
   echo "Test result: PASSED"
   exit 0
