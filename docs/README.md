@@ -1,4 +1,4 @@
-# Rex User Guide
+# ui.Rex User Guide
 
 // Update the title above to match the actual product name
 
