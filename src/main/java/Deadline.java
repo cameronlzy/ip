@@ -4,6 +4,9 @@ class Deadline extends Task {
         super(description, TaskType.DEADLINE);
         this.by = by;
     }
+
+    public String getBy() { return by; }
+
     @Override
     public String toString() {
         return "[" + type.name().charAt(0) + "]" + status() + " " + description + " (by: " + by + ")";

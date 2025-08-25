@@ -18,6 +18,9 @@ abstract class Task {
 
     protected String status() { return isDone ? "[X]" : "[ ]"; }
 
+    public String getDescription() { return description; }
+    public boolean isDone() { return isDone; }
+
     @Override
     public String toString() {
         return "[" + type.name().charAt(0) + "]" + status() + " " + description;

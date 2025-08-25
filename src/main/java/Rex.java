@@ -71,6 +71,9 @@ public class Rex {
                 line();
                 System.out.println("     Bye. Hope to see you again soon!");
                 line();
+                try { Storage.save(DATA_PATH, tasks); } catch (Exception ignored) {
+                    System.out.println("Error Saving");
+                }
                 break;
             } else if (input.equalsIgnoreCase("list")) {
                 list(tasks);
