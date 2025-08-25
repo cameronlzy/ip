@@ -1,8 +1,10 @@
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class Rex {
+    private static final Path DATA_PATH = Path.of("data", "rex.txt");
     private static void line() {
         System.out.println("____________________________________________________________");
     }
@@ -51,8 +53,12 @@ public class Rex {
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        List<Task> tasks = new ArrayList<>();
-
+        List<Task> tasks;
+        try {
+            tasks = Storage.load(DATA_PATH);
+        } catch (Exception e) {
+            tasks = new ArrayList<>();
+        }
         line();
         System.out.println("     Hello! I'm Rex");
         System.out.println("     What can I do for you?");
