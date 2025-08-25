@@ -1,3 +1,5 @@
+package utils;
+
 import java.time.*;
 import java.time.format.*;
 import java.util.List;
@@ -18,7 +20,7 @@ public final class DateTimeUtil {
             DateTimeFormatter.ofPattern("MMM d yyyy, h:mma");
 
     public static LocalDateTime parseFlexible(String s) {
-        String in = s.trim();
+        String in = s.trim().replaceAll("\\s+", " ");
         for (DateTimeFormatter f : ACCEPT) {
             try {
                 if (f == DateTimeFormatter.ISO_LOCAL_DATE) {
@@ -28,7 +30,7 @@ public final class DateTimeUtil {
                 return LocalDateTime.parse(in, f);
             } catch (DateTimeParseException ignore) {}
         }
-        return LocalDateTime.parse(in);
+        throw new DateTimeParseException("Unrecognized date format", in, 0);
     }
 
     public static String readable(LocalDateTime dt) {

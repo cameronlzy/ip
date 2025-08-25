@@ -1,6 +1,10 @@
+package tasks;
+
+import utils.DateTimeUtil;
+
 import java.time.LocalDateTime;
 
-class Event extends Task {
+public class Event extends Task {
     private final LocalDateTime from;
     private final LocalDateTime to;
     public Event(String description, LocalDateTime from, LocalDateTime to) {

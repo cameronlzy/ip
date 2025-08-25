@@ -1,3 +1,12 @@
+package ui;
+
+import tasks.Deadline;
+import tasks.Event;
+import tasks.Todo;
+import utils.DateTimeUtil;
+import utils.Storage;
+import tasks.Task;
+
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -71,7 +80,7 @@ public class Rex {
                 String body = input.substring(9).trim();
                 int sep = body.indexOf(" /by ");
                 if (sep < 0) {
-                    System.out.println("Usage: deadline <description> /by <time>");
+                    UI.usageDeadline();
                     continue;
                 }
                 String desc = body.substring(0, sep).trim();
@@ -88,7 +97,7 @@ public class Rex {
                 int fromIdx = body.indexOf(" /from ");
                 int toIdx = body.indexOf(" /to ");
                 if (fromIdx < 0 || toIdx < 0 || toIdx <= fromIdx) {
-                    UI.invalidEventDate();
+                    UI.usageEvent();
                     continue;
                 }
                 String desc = body.substring(0, fromIdx).trim();

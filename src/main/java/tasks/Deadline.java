@@ -1,5 +1,9 @@
+package tasks;
+
+import utils.DateTimeUtil;
+
 import java.time.LocalDateTime;
-class Deadline extends Task {
+public class Deadline extends Task {
     private final LocalDateTime by;
     public Deadline(String description, LocalDateTime by) {
         super(description, TaskType.DEADLINE);
