@@ -9,48 +9,6 @@ public class Rex {
         System.out.println("____________________________________________________________");
     }
 
-    private static void added(List<Task> tasks, Task t) {
-        line();
-        System.out.println("     Got it. I've added this task:");
-        System.out.println("       " + t);
-        System.out.println("     Now you have "
-                + tasks.size()
-                + (tasks.size() > 1 ? " tasks" : " task")
-                + " in the list.");
-        line();
-    }
-
-    private static void list(List<Task> tasks) {
-        line();
-        System.out.println("     Here are the tasks in your list:");
-        for (int i = 0; i < tasks.size(); i++) {
-            System.out.println("     " + (i + 1) + "." + tasks.get(i));
-        }
-        line();
-    }
-
-    private static void okMarked(Task t, boolean done) {
-        line();
-        if (done) {
-            System.out.println("     Nice! I've marked this task as done:");
-        } else {
-            System.out.println("     OK, I've marked this task as not done yet:");
-        }
-        System.out.println("       " + t);
-        line();
-    }
-
-    private static void okDeleted(List<Task> tasks, Task t) {
-        line();
-        System.out.println("     Noted. I've removed this task:");
-        System.out.println("       " + t);
-        System.out.println("     Now you have "
-                + tasks.size()
-                + (tasks.size() > 1 ? " tasks" : " task")
-                + " in the list.");
-        line();
-    }
-
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         List<Task> tasks;
@@ -76,39 +34,39 @@ public class Rex {
                 }
                 break;
             } else if (input.equalsIgnoreCase("list")) {
-                list(tasks);
+                UI.list(tasks);
             } else if (input.startsWith("delete ")) {
                 try {
                     int idx = Integer.parseInt(input.substring(6).trim()) - 1;
                     Task t = tasks.get(idx);
                     tasks.remove(idx);
-                    okDeleted(tasks, t);
+                    UI.deleted(tasks, t);
                 } catch (Exception e) {
-                    System.out.println("Invalid task number for delete.");
+                    UI.invalidDeleteIndex();
                 }
             } else if (input.startsWith("mark ")) {
                 try {
                     int idx = Integer.parseInt(input.substring(5).trim()) - 1;
                     Task t = tasks.get(idx);
                     t.markDone();
-                    okMarked(t, true);
+                    UI.marked(t, true);
                 } catch (Exception e) {
-                    System.out.println("Invalid task number for mark.");
+                    UI.invalidMarkIndex();
                 }
             } else if (input.startsWith("unmark ")) {
                 try {
                     int idx = Integer.parseInt(input.substring(7).trim()) - 1;
                     Task t = tasks.get(idx);
                     t.markUndone();
-                    okMarked(t, false);
+                    UI.marked(t, false);
                 } catch (Exception e) {
-                    System.out.println("Invalid task number for unmark.");
+                    UI.invalidUnmarkIndex();
                 }
             } else if (input.startsWith("todo ")) {
                 String desc = input.substring(5).trim();
                 Task t = new Todo(desc);
                 tasks.add(t);
-                added(tasks, t);
+                UI.added(tasks, t);
             } else if (input.startsWith("deadline ")) {
                 String body = input.substring(9).trim();
                 int sep = body.indexOf(" /by ");
@@ -121,16 +79,16 @@ public class Rex {
                 try {
                     Task t = new Deadline(desc, DateTimeUtil.parseFlexible(byStr));
                     tasks.add(t);
-                    added(tasks, t);
+                    UI.added(tasks, t);
                 } catch (Exception e) {
-                    System.out.println("Invalid date/time. Try formats like 2019-12-02 1800 or 2/12/2019 1800.");
+                    UI.invalidDeadlineDate();
                 }
             } else if (input.startsWith("event ")) {
                 String body = input.substring(6).trim();
                 int fromIdx = body.indexOf(" /from ");
                 int toIdx = body.indexOf(" /to ");
                 if (fromIdx < 0 || toIdx < 0 || toIdx <= fromIdx) {
-                    System.out.println("Usage: event <desc> /from <yyyy-MM-dd[ HHmm]> /to <yyyy-MM-dd[ HHmm]>");
+                    UI.invalidEventDate();
                     continue;
                 }
                 String desc = body.substring(0, fromIdx).trim();
@@ -139,9 +97,9 @@ public class Rex {
                 try {
                     Task t = new Event(desc, DateTimeUtil.parseFlexible(fromStr), DateTimeUtil.parseFlexible(toStr));
                     tasks.add(t);
-                    added(tasks, t);
+                    UI.added(tasks, t);
                 } catch (Exception e) {
-                    System.out.println("Invalid date/time for event. Use 2019-12-02 1800 or 2/12/2019 1800.");
+                    UI.invalidEventDate();
                 }
             } else {
                 System.out.println("Unknown command.");
