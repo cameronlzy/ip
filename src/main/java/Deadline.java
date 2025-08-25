@@ -1,14 +1,14 @@
+import java.time.LocalDateTime;
 class Deadline extends Task {
-    private final String by;
-    public Deadline(String description, String by) {
+    private final LocalDateTime by;
+    public Deadline(String description, LocalDateTime by) {
         super(description, TaskType.DEADLINE);
         this.by = by;
     }
-
-    public String getBy() { return by; }
-
-    @Override
-    public String toString() {
-        return "[" + type.name().charAt(0) + "]" + status() + " " + description + " (by: " + by + ")";
+    public LocalDateTime getBy() { return by; }
+    public String getByIso() { return by.toString(); } // for storage
+    @Override public String toString() {
+        return "[" + type.name().charAt(0) + "]" + status() + " " + description
+                + " (by: " + DateTimeUtil.readable(by) + ")";
     }
 }

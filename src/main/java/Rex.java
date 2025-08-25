@@ -117,24 +117,32 @@ public class Rex {
                     continue;
                 }
                 String desc = body.substring(0, sep).trim();
-                String by = body.substring(sep + 5).trim();
-                Task t = new Deadline(desc, by);
-                tasks.add(t);
-                added(tasks, t);
+                String byStr = body.substring(sep + 5).trim();
+                try {
+                    Task t = new Deadline(desc, DateTimeUtil.parseFlexible(byStr));
+                    tasks.add(t);
+                    added(tasks, t);
+                } catch (Exception e) {
+                    System.out.println("Invalid date/time. Try formats like 2019-12-02 1800 or 2/12/2019 1800.");
+                }
             } else if (input.startsWith("event ")) {
                 String body = input.substring(6).trim();
                 int fromIdx = body.indexOf(" /from ");
                 int toIdx = body.indexOf(" /to ");
                 if (fromIdx < 0 || toIdx < 0 || toIdx <= fromIdx) {
-                    System.out.println("Usage: event <description> /from <start> /to <end>");
+                    System.out.println("Usage: event <desc> /from <yyyy-MM-dd[ HHmm]> /to <yyyy-MM-dd[ HHmm]>");
                     continue;
                 }
                 String desc = body.substring(0, fromIdx).trim();
-                String from = body.substring(fromIdx + 7, toIdx).trim();
-                String to = body.substring(toIdx + 5).trim();
-                Task t = new Event(desc, from, to);
-                tasks.add(t);
-                added(tasks, t);
+                String fromStr = body.substring(fromIdx + 7, toIdx).trim();
+                String toStr = body.substring(toIdx + 5).trim();
+                try {
+                    Task t = new Event(desc, DateTimeUtil.parseFlexible(fromStr), DateTimeUtil.parseFlexible(toStr));
+                    tasks.add(t);
+                    added(tasks, t);
+                } catch (Exception e) {
+                    System.out.println("Invalid date/time for event. Use 2019-12-02 1800 or 2/12/2019 1800.");
+                }
             } else {
                 System.out.println("Unknown command.");
             }
