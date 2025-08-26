@@ -110,6 +110,13 @@ public class Rex {
                 } catch (Exception e) {
                     UI.invalidEventDate();
                 }
+            } else if (input.startsWith("find")) {
+                String body = input.length() >= 5 ? input.substring(5).trim() : "";
+                if (body.isEmpty()) {
+                    UI.usageFind();
+                    continue;
+                }
+                UI.find(tasks, body);
             } else {
                 System.out.println("Unknown command.");
             }

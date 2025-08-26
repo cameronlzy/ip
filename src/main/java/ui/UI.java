@@ -33,6 +33,20 @@ public class UI {
         line();
     }
 
+    public static void find(List<Task> tasks, String query) {
+        String q = query.toLowerCase();
+        line();
+        System.out.println("     Here are the matching tasks in your list:");
+        int n = 0;
+        for (Task t : tasks) {
+            String d = t.getDescription();
+            if (d != null && d.toLowerCase().contains(q)) {
+                System.out.println("     " + (++n) + "." + t);
+            }
+        }
+        line();
+    }
+
     public static void list(List<Task> tasks) {
         line();
         System.out.println("     Here are the tasks in your list:");
@@ -78,6 +92,10 @@ public class UI {
 
     public static void usageDeadline() {
         System.out.println("Usage: deadline <description> /by <yyyy-MM-dd[ HHmm]>");
+    }
+
+    public static void usageFind() {
+        System.out.println("Usage: find <keyword>");
     }
 
 
