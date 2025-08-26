@@ -11,4 +11,4 @@ echo "▶ Running tests before commit…"
 # Use --console=plain to keep output tidy in hooks
 ./gradlew --console=plain test
 
-echo "Tests passed. Proceeding with commit."
+echo " ✅✅✅ Tests passed. Proceeding with commit. ✅✅✅"
