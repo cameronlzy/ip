@@ -12,12 +12,40 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * The {@code Rex} class represents the entry point for the chatbot application.
+ * <p>
+ * Rex is a simple task manager that supports different task types
+ * (Todo, Deadline, Event). It can store tasks persistently to a file
+ * and load them back when restarted.
+ * <p>
+ * Supported commands:
+ * <ul>
+ *   <li>{@code list} - Display all tasks</li>
+ *   <li>{@code todo <description>} - Add a todo task</li>
+ *   <li>{@code deadline <description> /by <date>} - Add a deadline task</li>
+ *   <li>{@code event <description> /from <date> /to <date>} - Add an event task</li>
+ *   <li>{@code mark <index>} - Mark a task as done</li>
+ *   <li>{@code unmark <index>} - Mark a task as not done</li>
+ *   <li>{@code delete <index>} - Delete a task</li>
+ *   <li>{@code bye} - Exit the program</li>
+ * </ul>
+ */
+
 public class Rex {
     private static final Path DATA_PATH = Path.of("data", "rex.txt");
+    /**
+     * Prints a horizontal line for formatting.
+     */
     private static void line() {
         System.out.println("____________________________________________________________");
     }
 
+    /**
+     * Entry point for the Rex chatbot.
+     *
+     * @param args Command-line arguments (unused).
+     */
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         List<Task> tasks;

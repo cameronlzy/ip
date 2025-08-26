@@ -1,14 +1,27 @@
 package ui;
 
 import tasks.Task;
-
 import java.util.List;
 
+/**
+ * The {@code UI} class encapsulates all user interface printing logic
+ * for the Rex chatbot.
+ * <p>
+ * This class provides reusable static methods to display responses
+ * such as greetings, task additions, task deletions, errors, and usage messages.
+ */
 public class UI {
+
+    /**
+     * Prints a horizontal line for formatting output.
+     */
     public static void line() {
         System.out.println("____________________________________________________________");
     }
 
+    /**
+     * Prints the greeting message shown when Rex starts.
+     */
     public static void greet() {
         line();
         System.out.println("     Hello! I'm Rex");
@@ -16,12 +29,21 @@ public class UI {
         line();
     }
 
+    /**
+     * Prints the farewell message shown when Rex exits.
+     */
     public static void bye() {
         line();
         System.out.println("     Bye. Hope to see you again soon!");
         line();
     }
 
+    /**
+     * Prints a message after a task is successfully added.
+     *
+     * @param tasks The current list of tasks.
+     * @param t     The task that was added.
+     */
     public static void added(List<Task> tasks, Task t) {
         line();
         System.out.println("     Got it. I've added this task:");
@@ -33,6 +55,11 @@ public class UI {
         line();
     }
 
+    /**
+     * Prints the current list of tasks.
+     *
+     * @param tasks The list of tasks to display.
+     */
     public static void list(List<Task> tasks) {
         line();
         System.out.println("     Here are the tasks in your list:");
@@ -42,6 +69,12 @@ public class UI {
         line();
     }
 
+    /**
+     * Prints a message when a task is marked/unmarked.
+     *
+     * @param t    The task being updated.
+     * @param done {@code true} if the task was marked as done, {@code false} otherwise.
+     */
     public static void marked(Task t, boolean done) {
         line();
         if (done) {
@@ -53,6 +86,12 @@ public class UI {
         line();
     }
 
+    /**
+     * Prints a message when a task is deleted.
+     *
+     * @param tasks The current list of tasks.
+     * @param t     The task that was deleted.
+     */
     public static void deleted(List<Task> tasks, Task t) {
         line();
         System.out.println("     Noted. I've removed this task:");
@@ -63,6 +102,8 @@ public class UI {
                 + " in the list.");
         line();
     }
+
+    // --- Error and usage messages ---
 
     public static void invalidDeleteIndex() {
         System.out.println("Invalid task number for delete.");
@@ -79,8 +120,6 @@ public class UI {
     public static void usageDeadline() {
         System.out.println("Usage: deadline <description> /by <yyyy-MM-dd[ HHmm]>");
     }
-
-
 
     public static void invalidDeadlineDate() {
         System.out.println("Invalid date/time. Try formats like 2019-12-02 1800 or 2/12/2019 1800.");
