@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Only run if the Gradle wrapper exists
+if [[ ! -x "./gradlew" ]]; then
+  echo "gradlew not found. Make sure the Gradle wrapper is committed and executable (chmod +x gradlew)."
+  exit 1
+fi
+
+echo "▶ Running tests before commit…"
+# Use --console=plain to keep output tidy in hooks
+./gradlew --console=plain test
+
+echo "Tests passed. Proceeding with commit."
