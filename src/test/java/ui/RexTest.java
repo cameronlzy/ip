@@ -14,6 +14,13 @@ class RexTest {
     private static final String LINE = "____________________________________________________________";
     private static String NL() { return System.lineSeparator(); }
 
+    private static String originalUserDir;
+
+    @BeforeAll
+    static void rememberOriginalDir() {
+        originalUserDir = System.getProperty("user.dir");
+    }
+
     @BeforeEach
     void setUp(TestInfo info) throws Exception {
         origOut = System.out;
@@ -30,6 +37,13 @@ class RexTest {
     void tearDown() {
         System.setOut(origOut);
         System.setIn(origIn);
+    }
+
+    @AfterAll
+    static void restoreOriginalDir() {
+        if (originalUserDir != null) {
+            System.setProperty("user.dir", originalUserDir);
+        }
     }
 
     private String run(String script) {
