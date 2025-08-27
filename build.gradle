@@ -15,10 +15,8 @@ dependencies {
 
 test {
     useJUnitPlatform()
-
     testLogging {
         events "passed", "skipped", "failed"
-
         showExceptions true
         exceptionFormat "full"
         showCauses true
@@ -28,14 +26,16 @@ test {
 }
 
 application {
-    mainClass.set("seedu.duke.Duke")
+    mainClass = 'ui.Rex'
 }
 
-shadowJar {
-    archiveBaseName = "duke"
-    archiveClassifier = null
+tasks.named('shadowJar') {
+    archiveBaseName.set('Rex')
+    archiveVersion.set('')
+    archiveClassifier.set('')
+    manifest { attributes('Main-Class': application.mainClass.get()) }
 }
 
-run{
+tasks.named('run') {
     standardInput = System.in
 }

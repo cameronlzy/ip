@@ -1,11 +1,8 @@
 package ui;
 
-import tasks.Deadline;
-import tasks.Event;
-import tasks.Todo;
+import tasks.*;
 import utils.DateTimeUtil;
 import utils.Storage;
-import tasks.Task;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -48,11 +45,12 @@ public class Rex {
      */
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        List<Task> tasks;
+        TaskList taskList;
         try {
-            tasks = Storage.load(DATA_PATH);
+            List<Task> loaded = Storage.load(DATA_PATH);
+            taskList = new TaskList(loaded);
         } catch (Exception e) {
-            tasks = new ArrayList<>();
+            taskList = new TaskList();
         }
         line();
         System.out.println("     Hello! I'm Rex");
@@ -66,25 +64,24 @@ public class Rex {
                 line();
                 System.out.println("     Bye. Hope to see you again soon!");
                 line();
-                try { Storage.save(DATA_PATH, tasks); } catch (Exception ignored) {
+                try { Storage.save(DATA_PATH, new ArrayList<>(taskList.asList())); } catch (Exception ignored) {
                     System.out.println("Error Saving");
                 }
                 break;
             } else if (input.equalsIgnoreCase("list")) {
-                UI.list(tasks);
+                UI.list(taskList.asList());
             } else if (input.startsWith("delete ")) {
                 try {
-                    int idx = Integer.parseInt(input.substring(6).trim()) - 1;
-                    Task t = tasks.get(idx);
-                    tasks.remove(idx);
-                    UI.deleted(tasks, t);
+                    int idx1 = Integer.parseInt(input.substring(6).trim());
+                    Task removed = taskList.delete(idx1);
+                    UI.deleted(taskList.asList(), removed);
                 } catch (Exception e) {
                     UI.invalidDeleteIndex();
                 }
             } else if (input.startsWith("mark ")) {
                 try {
-                    int idx = Integer.parseInt(input.substring(5).trim()) - 1;
-                    Task t = tasks.get(idx);
+                    int idx1 = Integer.parseInt(input.substring(5).trim());
+                    Task t = taskList.get(idx1);
                     t.markDone();
                     UI.marked(t, true);
                 } catch (Exception e) {
@@ -92,8 +89,8 @@ public class Rex {
                 }
             } else if (input.startsWith("unmark ")) {
                 try {
-                    int idx = Integer.parseInt(input.substring(7).trim()) - 1;
-                    Task t = tasks.get(idx);
+                    int idx1 = Integer.parseInt(input.substring(7).trim());
+                    Task t = taskList.get(idx1);
                     t.markUndone();
                     UI.marked(t, false);
                 } catch (Exception e) {
@@ -102,8 +99,8 @@ public class Rex {
             } else if (input.startsWith("todo ")) {
                 String desc = input.substring(5).trim();
                 Task t = new Todo(desc);
-                tasks.add(t);
-                UI.added(tasks, t);
+                taskList.add(t);
+                UI.added(taskList.asList(), t);
             } else if (input.startsWith("deadline ")) {
                 String body = input.substring(9).trim();
                 int sep = body.indexOf(" /by ");
@@ -115,8 +112,8 @@ public class Rex {
                 String byStr = body.substring(sep + 5).trim();
                 try {
                     Task t = new Deadline(desc, DateTimeUtil.parseFlexible(byStr));
-                    tasks.add(t);
-                    UI.added(tasks, t);
+                    taskList.add(t);
+                    UI.added(taskList.asList(), t);
                 } catch (Exception e) {
                     UI.invalidDeadlineDate();
                 }
@@ -133,8 +130,8 @@ public class Rex {
                 String toStr = body.substring(toIdx + 5).trim();
                 try {
                     Task t = new Event(desc, DateTimeUtil.parseFlexible(fromStr), DateTimeUtil.parseFlexible(toStr));
-                    tasks.add(t);
-                    UI.added(tasks, t);
+                    taskList.add(t);
+                    UI.added(taskList.asList(), t);
                 } catch (Exception e) {
                     UI.invalidEventDate();
                 }
@@ -144,7 +141,7 @@ public class Rex {
                     UI.usageFind();
                     continue;
                 }
-                UI.find(tasks, body);
+                UI.find(taskList.asList(), body);
             } else {
                 System.out.println("Unknown command.");
             }
