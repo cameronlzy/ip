@@ -1,6 +1,6 @@
-package ui;
+package seedu.rex.ui;
 
-import tasks.Task;
+import seedu.rex.tasks.Task;
 import java.util.List;
 
 /**

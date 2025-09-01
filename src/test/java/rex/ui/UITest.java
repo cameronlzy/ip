@@ -1,8 +1,9 @@
-package ui;
+package rex.ui;
 
 import org.junit.jupiter.api.*;
-import tasks.Todo;
-import tasks.Task;
+import seedu.rex.tasks.Todo;
+import seedu.rex.tasks.Task;
+import seedu.rex.ui.UI;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;

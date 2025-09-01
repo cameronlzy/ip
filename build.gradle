@@ -11,12 +11,29 @@ repositories {
 dependencies {
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.10.0'
     testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.10.0'
+
+    String javaFxVersion = '17.0.7'
+
+        implementation group: 'org.openjfx', name: 'javafx-base', version: javaFxVersion, classifier: 'win'
+        implementation group: 'org.openjfx', name: 'javafx-base', version: javaFxVersion, classifier: 'mac'
+        implementation group: 'org.openjfx', name: 'javafx-base', version: javaFxVersion, classifier: 'linux'
+        implementation group: 'org.openjfx', name: 'javafx-controls', version: javaFxVersion, classifier: 'win'
+        implementation group: 'org.openjfx', name: 'javafx-controls', version: javaFxVersion, classifier: 'mac'
+        implementation group: 'org.openjfx', name: 'javafx-controls', version: javaFxVersion, classifier: 'linux'
+        implementation group: 'org.openjfx', name: 'javafx-fxml', version: javaFxVersion, classifier: 'win'
+        implementation group: 'org.openjfx', name: 'javafx-fxml', version: javaFxVersion, classifier: 'mac'
+        implementation group: 'org.openjfx', name: 'javafx-fxml', version: javaFxVersion, classifier: 'linux'
+        implementation group: 'org.openjfx', name: 'javafx-graphics', version: javaFxVersion, classifier: 'win'
+        implementation group: 'org.openjfx', name: 'javafx-graphics', version: javaFxVersion, classifier: 'mac'
+        implementation group: 'org.openjfx', name: 'javafx-graphics', version: javaFxVersion, classifier: 'linux'
 }
 
 test {
     useJUnitPlatform()
+
     testLogging {
         events "passed", "skipped", "failed"
+
         showExceptions true
         exceptionFormat "full"
         showCauses true
@@ -26,16 +43,15 @@ test {
 }
 
 application {
-    mainClass = 'ui.Rex'
+    mainClass.set("seedu.rex.Launcher")
 }
 
-tasks.named('shadowJar') {
-    archiveBaseName.set('Rex')
-    archiveVersion.set('')
-    archiveClassifier.set('')
-    manifest { attributes('Main-Class': application.mainClass.get()) }
+shadowJar {
+    archiveBaseName = "rex"
+    archiveClassifier = null
+    archiveFileName = 'rex.jar'
 }
 
-tasks.named('run') {
+run{
     standardInput = System.in
 }

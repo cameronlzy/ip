@@ -1,6 +1,8 @@
-package ui;
+package rex.ui;
 
 import org.junit.jupiter.api.*;
+import seedu.rex.ui.Rex;
+
 import java.io.*;
 import java.nio.file.*;
 import static org.junit.jupiter.api.Assertions.*;

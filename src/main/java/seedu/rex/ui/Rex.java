@@ -1,8 +1,14 @@
-package ui;
+package seedu.rex.ui;
 
-import tasks.*;
-import utils.DateTimeUtil;
-import utils.Storage;
+
+import seedu.rex.tasks.Task;
+import seedu.rex.tasks.TaskList;
+import seedu.rex.tasks.Todo;
+import seedu.rex.tasks.Deadline;
+import seedu.rex.tasks.Event;
+
+import seedu.rex.utils.DateTimeUtil;
+import seedu.rex.utils.Storage;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
