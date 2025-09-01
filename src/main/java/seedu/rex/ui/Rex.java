@@ -155,4 +155,8 @@ public class Rex {
 
         sc.close();
     }
+
+    public String getResponse(String input) {
+        return "Rex heard: " + input;
+    }
 }

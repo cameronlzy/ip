@@ -11,6 +11,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Region;
+import seedu.rex.ui.Rex;
 
 import java.util.Objects;
 
@@ -21,8 +22,7 @@ public class Main extends Application {
     private TextField userInput;
     private Button sendButton;
     private Scene scene;
-    private Image userImage;
-    private Image rexImage;
+    private Rex rex = new Rex();
 
 
 
@@ -35,15 +35,13 @@ public class Main extends Application {
         var userUrl = Objects.requireNonNull(getClass().getResource("/images/userImage.jpg"), "Missing /images/userImage.jpg");
         var rexUrl = Objects.requireNonNull(getClass().getResource("/images/rexImage.jpg"), "Missing /images/rexImage.jpg");
         Image userImage = new Image(userUrl.toExternalForm());
+        Image rexImage = new Image(rexUrl.toExternalForm());
         scrollPane = new ScrollPane();
         dialogContainer = new VBox();
         scrollPane.setContent(dialogContainer);
 
         userInput = new TextField();
         sendButton = new Button("Send");
-
-        DialogBox dialogBox = new DialogBox("Hello!", userImage);
-        dialogContainer.getChildren().addAll(dialogBox);
 
         AnchorPane mainLayout = new AnchorPane();
         mainLayout.getChildren().addAll(scrollPane, userInput, sendButton);
@@ -81,6 +79,25 @@ public class Main extends Application {
         AnchorPane.setLeftAnchor(userInput, 1.0);
         AnchorPane.setBottomAnchor(userInput, 1.0);
 
+        sendButton.setOnMouseClicked((event) -> {
+            handleUserInput(userImage, rexImage);
+        });
+        userInput.setOnAction((event) -> {
+            handleUserInput(userImage, rexImage);
+        });
+
+        dialogContainer.heightProperty().addListener((observable) -> scrollPane.setVvalue(1.0));
+
         //More code to be added here later
+    }
+
+    private void handleUserInput(Image userProfPic, Image rexProfPic) {
+        String userText = userInput.getText();
+        String rexText = rex.getResponse(userInput.getText());
+        dialogContainer.getChildren().addAll(
+                DialogBox.getUserDialog(userText, userProfPic),
+                DialogBox.getRexDialog(rexText, rexProfPic)
+        );
+        userInput.clear();
     }
 }
