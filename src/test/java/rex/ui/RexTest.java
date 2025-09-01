@@ -2,21 +2,14 @@ package rex.ui;
 
 import org.junit.jupiter.api.*;
 import seedu.rex.ui.Rex;
-
 import java.io.*;
 import java.nio.file.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class RexTest {
-
-    private PrintStream origOut;
-    private InputStream origIn;
-    private ByteArrayOutputStream out;
-
-    private static final String LINE = "____________________________________________________________";
-    private static String NL() { return System.lineSeparator(); }
-
     private static String originalUserDir;
+    private Path tempDir;
+    private Rex rex;
 
     @BeforeAll
     static void rememberOriginalDir() {
@@ -25,20 +18,26 @@ class RexTest {
 
     @BeforeEach
     void setUp(TestInfo info) throws Exception {
-        origOut = System.out;
-        origIn = System.in;
-        out = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(out));
+        // Create a unique temp directory for each test
+        tempDir = Files.createTempDirectory("rex-test-" + info.getDisplayName().replaceAll("[^a-zA-Z0-9]", ""));
+        System.setProperty("user.dir", tempDir.toAbsolutePath().toString());
 
-        Path tmp = Files.createTempDirectory("rex-" + info.getDisplayName());
-        System.setProperty("user.dir", tmp.toAbsolutePath().toString());
-        Files.createDirectories(tmp.resolve("data"));
+        // Create data directory
+        Files.createDirectories(tempDir.resolve("data"));
+
+        // Create fresh Rex instance for each test
+        rex = new Rex();
     }
 
     @AfterEach
-    void tearDown() {
-        System.setOut(origOut);
-        System.setIn(origIn);
+    void tearDown() throws Exception {
+        // Clean up temp directory completely
+        if (tempDir != null && Files.exists(tempDir)) {
+            deleteDirectory(tempDir);
+        }
+
+        // Restore original directory
+        System.setProperty("user.dir", originalUserDir);
     }
 
     @AfterAll
@@ -48,64 +47,120 @@ class RexTest {
         }
     }
 
-    private String run(String script) {
-        System.setIn(new ByteArrayInputStream(script.getBytes()));
-        Rex.main(new String[0]);
-        return out.toString();
-    }
-
-    @Test
-    void list_onFreshStart_showsEmptyHeaderAndFooter() {
-        String output = run(String.join(NL(),
-                "list",
-                "bye"
-        ) + NL());
-
-        assertTrue(output.contains("Here are the tasks in your list:"));
-    }
-
-    @Test
-    void add_todo_then_list_showsOneTask() {
-        String output = run(String.join(NL(),
-                "todo read book",
-                "list",
-                "bye"
-        ) + NL());
-        System.out.println(output);
-
-        assertTrue(output.contains("Got it. I've added this task:"));
-        assertTrue(output.contains("[T][ ] read book"));
-        assertTrue(output.contains("Now you have"));
-        assertTrue(output.contains("task in the list.") || output.contains("tasks in the list."));
-        assertTrue(output.contains("1.[T][ ] read book"));
+    /**
+     * Recursively delete a directory and all its contents
+     */
+    private void deleteDirectory(Path dir) throws Exception {
+        if (Files.exists(dir)) {
+            Files.walk(dir)
+                    .sorted((a, b) -> b.compareTo(a)) // Delete files before directories
+                    .forEach(path -> {
+                        try {
+                            Files.deleteIfExists(path);
+                        } catch (IOException e) {
+                            // Ignore deletion errors during cleanup
+                        }
+                    });
+        }
     }
 
     @Test
     void mark_task_then_list_showsMarked() {
-        String output = run(String.join(NL(),
-                "todo read book",
-                "mark 1",
-                "list",
-                "bye"
-        ) + NL());
+        // Add a task first
+        rex.getResponse("todo read book");
 
-        assertTrue(output.contains("Nice! I've marked this task as done:"));
-        assertTrue(output.contains("[T][X] read book"));          // marked
-        assertTrue(output.contains("1.[T][X] read book"));         // list reflects marked
+        // Mark it as done
+        String markResponse = rex.getResponse("mark 1");
+        assertTrue(markResponse.contains("Nice! I've marked this task as done:"));
+        assertTrue(markResponse.contains("[T][X] read book"));
+
+        // Verify it shows as marked in list
+        String listResponse = rex.getResponse("list");
+        assertTrue(listResponse.contains("1.[T][X] read book"));
     }
 
     @Test
-    void delete_task_then_list_isEmptyAgain() {
-        String output = run(String.join(NL(),
-                "todo read book",
-                "delete 1",
-                "list",
-                "bye"
-        ) + NL());
+    void unmark_task_then_list_showsUnmarked() {
+        // Add and mark a task
+        rex.getResponse("todo read book");
+        rex.getResponse("mark 1");
 
-        assertTrue(output.contains("Noted. I've removed this task:"));
-        assertTrue(output.contains("Now you have"));
-        assertTrue(output.contains("task in the list.") || output.contains("tasks in the list."));
-        // after delete, list header still prints, but no numbered lines should include the old task
+        // Unmark it
+        String unmarkResponse = rex.getResponse("unmark 1");
+        assertTrue(unmarkResponse.contains("OK, I've marked this task as not done yet:"));
+        assertTrue(unmarkResponse.contains("[T][ ] read book"));
+
+        // Verify it shows as unmarked in list
+        String listResponse = rex.getResponse("list");
+        assertTrue(listResponse.contains("1.[T][ ] read book"));
+    }
+
+
+    @Test
+    void add_deadline_task() {
+        String response = rex.getResponse("deadline submit assignment /by 2024-12-25 2359");
+        assertTrue(response.contains("Got it. I've added this task:"));
+        assertTrue(response.contains("[D][ ] submit assignment"));
+        assertTrue(response.contains("Now you have"));
+        assertTrue(response.contains("in the list"));
+    }
+
+    @Test
+    void add_event_task() {
+        String response = rex.getResponse("event project meeting /from 2024-12-20 1400 /to 2024-12-20 1600");
+        assertTrue(response.contains("Got it. I've added this task:"));
+        assertTrue(response.contains("[E][ ] project meeting"));
+        assertTrue(response.contains("Now you have"));
+        assertTrue(response.contains("in the list"));
+    }
+
+    @Test
+    void find_tasks_by_keyword() {
+        // Add multiple tasks
+        rex.getResponse("todo read book");
+        rex.getResponse("todo read newspaper");
+        rex.getResponse("todo buy groceries");
+
+        // Find tasks containing "read"
+        String findResponse = rex.getResponse("find read");
+        assertTrue(findResponse.contains("Here are the matching tasks in your list:"));
+        assertTrue(findResponse.contains("read book"));
+        assertTrue(findResponse.contains("read newspaper"));
+        assertFalse(findResponse.contains("buy groceries"));
+    }
+
+    @Test
+    void invalid_commands_show_error_messages() {
+        // Invalid mark index
+        String markResponse = rex.getResponse("mark 99");
+        assertTrue(markResponse.contains("Invalid task number for mark"));
+
+        // Invalid delete index
+        String deleteResponse = rex.getResponse("delete 99");
+        assertTrue(deleteResponse.contains("Invalid task number for delete"));
+
+        // Invalid deadline format
+        String deadlineResponse = rex.getResponse("deadline task without by");
+        assertTrue(deadlineResponse.contains("Usage: deadline"));
+
+        // Invalid event format
+        String eventResponse = rex.getResponse("event task without from to");
+        assertTrue(eventResponse.contains("Usage: event"));
+    }
+
+    @Test
+    void bye_command_stops_running() {
+        assertTrue(rex.isRunning());
+
+        String byeResponse = rex.getResponse("bye");
+        assertTrue(byeResponse.contains("Bye. Hope to see you again soon!"));
+        assertFalse(rex.isRunning());
+    }
+
+    @Test
+    void unknown_command_shows_help() {
+        String response = rex.getResponse("invalidcommand");
+        assertTrue(response.contains("Unknown command"));
+        assertTrue(response.contains("Try 'list', 'todo'"));
     }
 }
