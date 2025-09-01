@@ -264,13 +264,18 @@ public class Rex {
 
             line();
             // Format multi-line responses with proper indentation
-            String[] lines = response.split("\n");
-            for (String responseLine : lines) {
-                System.out.println("     " + responseLine);
-            }
+            printIndented(response.split("\n"));
             line();
         }
 
         sc.close();
+    }
+
+    private static void printIndented(String... lines) {
+        line();
+        for (String l : lines) {
+            System.out.println("     " + l);
+        }
+        line();
     }
 }
