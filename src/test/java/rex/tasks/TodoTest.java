@@ -1,6 +1,8 @@
-package tasks;
+package rex.tasks;
 
 import org.junit.jupiter.api.Test;
+import seedu.rex.tasks.Task;
+import seedu.rex.tasks.Todo;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

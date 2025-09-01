@@ -1,4 +1,4 @@
-package tasks;
+package seedu.rex.tasks;
 
 enum TaskType {
     TODO, DEADLINE, EVENT

@@ -1,4 +1,4 @@
-package utils;
+package seedu.rex.utils;
 
 import java.time.*;
 import java.time.format.*;

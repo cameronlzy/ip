@@ -1,4 +1,4 @@
-package tasks;
+package seedu.rex.tasks;
 
 import java.util.ArrayList;
 import java.util.Collections;

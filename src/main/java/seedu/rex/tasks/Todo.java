@@ -1,4 +1,4 @@
-package tasks;
+package seedu.rex.tasks;
 
 /**
  * Represents a simple Todo task with only a description.

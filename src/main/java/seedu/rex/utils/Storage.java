@@ -1,9 +1,9 @@
-package utils;
+package seedu.rex.utils;
 
-import tasks.Deadline;
-import tasks.Event;
-import tasks.Task;
-import tasks.Todo;
+import seedu.rex.tasks.Deadline;
+import seedu.rex.tasks.Event;
+import seedu.rex.tasks.Task;
+import seedu.rex.tasks.Todo;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;

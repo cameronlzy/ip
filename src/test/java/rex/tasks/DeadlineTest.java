@@ -1,6 +1,7 @@
-package tasks;
+package rex.tasks;
 
 import org.junit.jupiter.api.Test;
+import seedu.rex.tasks.Deadline;
 
 import java.time.LocalDateTime;
 
