@@ -37,6 +37,9 @@ public class MainWindow extends AnchorPane {
     /** Injects the Duke instance */
     public void setRex(Rex d) {
         rex = d;
+        dialogContainer.getChildren().add(
+                DialogBox.getRexDialog(rex.getWelcomeMessage(), rexImage)
+        );
     }
 
     /**

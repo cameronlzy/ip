@@ -77,9 +77,12 @@ public class Rex {
      * @return The response string from Rex.
      */
     public String getResponse(String input) {
-        String trimmedInput = input.trim();
+        assert input != null : "Input should never be null";
 
-        if (trimmedInput.equalsIgnoreCase("bye")) {
+        String trimmedInput = input.trim();
+        String lower = trimmedInput.toLowerCase();
+
+        if (lower.equals("bye")) {
             isRunning = false;
             try {
                 Storage.save(DATA_PATH, new ArrayList<>(taskList.asList()));
@@ -88,7 +91,7 @@ public class Rex {
             }
             return "Bye. Hope to see you again soon!";
 
-        } else if (trimmedInput.equalsIgnoreCase("list")) {
+        } else if (lower.equals("list")) {
             if (taskList.asList().isEmpty()) {
                 return "Your task list is empty!";
             }
@@ -100,7 +103,7 @@ public class Rex {
             }
             return sb.toString().trim();
 
-        } else if (trimmedInput.startsWith("delete ")) {
+        } else if (lower.startsWith("delete")) {
             // FIX: Check length before substring
             if (trimmedInput.length() <= 7) {
                 return "Invalid task number for delete.";
@@ -115,7 +118,7 @@ public class Rex {
                 return "Invalid task number for delete.";
             }
 
-        } else if (trimmedInput.startsWith("mark ")) {
+        } else if (lower.startsWith("mark ")) {
             // FIX: Check length before substring
             if (trimmedInput.length() <= 5) {
                 return "Invalid task number for mark.";
@@ -129,7 +132,7 @@ public class Rex {
                 return "Invalid task number for mark.";
             }
 
-        } else if (trimmedInput.startsWith("unmark ")) {
+        } else if (lower.startsWith("unmark ")) {
             // FIX: Check length before substring
             if (trimmedInput.length() <= 7) {
                 return "Invalid task number for unmark.";
@@ -143,7 +146,7 @@ public class Rex {
                 return "Invalid task number for unmark.";
             }
 
-        } else if (trimmedInput.startsWith("todo ")) {
+        } else if (lower.startsWith("todo ")) {
             // FIX: Check length before substring
             if (trimmedInput.length() <= 5) {
                 return "Todo description cannot be empty!";
@@ -158,7 +161,7 @@ public class Rex {
                     "\nNow you have " + taskList.asList().size() +
                     (taskList.asList().size() == 1 ? " task" : " tasks") + " in the list.";
 
-        } else if (trimmedInput.startsWith("deadline ")) {
+        } else if (lower.startsWith("deadline ")) {
             // FIX: Check length before substring
             if (trimmedInput.length() <= 9) {
                 return "Usage: deadline <description> /by <yyyy-MM-dd[ HHmm]>";
@@ -183,7 +186,7 @@ public class Rex {
                 return "Invalid date/time. Try formats like 2019-12-02 1800 or 2/12/2019 1800.";
             }
 
-        } else if (trimmedInput.startsWith("event ")) {
+        } else if (lower.startsWith("event ")) {
             // FIX: Check length before substring
             if (trimmedInput.length() <= 6) {
                 return "Usage: event <desc> /from <yyyy-MM-dd[ HHmm]> /to <yyyy-MM-dd[ HHmm]>";
@@ -210,7 +213,7 @@ public class Rex {
                 return "Invalid date/time for event. Use 2019-12-02 1800 or 2/12/2019 1800.";
             }
 
-        } else if (trimmedInput.startsWith("find")) {
+        } else if (lower.startsWith("find")) {
             String body = trimmedInput.length() >= 5 ? trimmedInput.substring(5).trim() : "";
             if (body.isEmpty()) {
                 return "Usage: find <keyword>";
