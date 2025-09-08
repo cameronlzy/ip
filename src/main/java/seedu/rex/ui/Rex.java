@@ -224,7 +224,7 @@ public class Rex {
 
     /**
      * Handles the {@code find} command by searching for tasks containing a keyword.
-     *
+     * Includes handling of partial text matchz
      * @param args the argument string containing the search keyword
      * @return a list of matching tasks, or an error/no-match message
      */
