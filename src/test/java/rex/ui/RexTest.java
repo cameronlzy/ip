@@ -160,6 +160,7 @@ class RexTest {
     @Test
     void unknown_command_shows_help() {
         String response = rex.getResponse("invalidcommand");
+        System.out.println((response));
         assertTrue(response.contains("Unknown command"));
         assertTrue(response.contains("Try 'list', 'todo'"));
     }
