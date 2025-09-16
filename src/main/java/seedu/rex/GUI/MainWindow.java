@@ -1,4 +1,4 @@
-package seedu.rex;
+package seedu.rex.GUI;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -8,8 +8,6 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import seedu.rex.ui.Rex;
-
-import java.util.Objects;
 
 /**
  * Controller for the main GUI.
