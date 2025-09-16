@@ -6,6 +6,13 @@ import java.io.*;
 import java.nio.file.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+
+/**
+ * Used ChatGPT to generate JavaDocs.
+ *
+ * Integration tests for the {@link seedu.rex.ui.Rex} chatbot class.
+ * These tests use a temporary directory to simulate data storage.
+ */
 class RexTest {
     private static String originalUserDir;
     private Path tempDir;
@@ -64,6 +71,10 @@ class RexTest {
         }
     }
 
+    /**
+     * Tests that marking a task done updates its representation
+     * and the list output shows it as marked.
+     */
     @Test
     void mark_task_then_list_showsMarked() {
         // Add a task first
@@ -79,6 +90,10 @@ class RexTest {
         assertTrue(listResponse.contains("1.[T][X] read book"));
     }
 
+    /**
+     * Tests that unmarking a task updates its representation
+     * and the list output shows it as unmarked.
+     */
     @Test
     void unmark_task_then_list_showsUnmarked() {
         // Add and mark a task
@@ -95,7 +110,10 @@ class RexTest {
         assertTrue(listResponse.contains("1.[T][ ] read book"));
     }
 
-
+    /**
+     * Tests that adding a deadline task produces the correct
+     * confirmation response.
+     */
     @Test
     void add_deadline_task() {
         String response = rex.getResponse("deadline submit assignment /by 2024-12-25 2359");
@@ -105,6 +123,10 @@ class RexTest {
         assertTrue(response.contains("in the list"));
     }
 
+    /**
+     * Tests that adding an event task produces the correct
+     * confirmation response.
+     */
     @Test
     void add_event_task() {
         String response = rex.getResponse("event project meeting /from 2024-12-20 1400 /to 2024-12-20 1600");
@@ -114,6 +136,11 @@ class RexTest {
         assertTrue(response.contains("in the list"));
     }
 
+    /**
+     * Tests that the "find" command returns only tasks
+     * containing the specified keyword and excludes
+     * non-matching tasks.
+     */
     @Test
     void find_tasks_by_keyword() {
         // Add multiple tasks
@@ -129,6 +156,11 @@ class RexTest {
         assertFalse(findResponse.contains("buy groceries"));
     }
 
+    /**
+     * Tests that the "find" command returns only tasks
+     * containing the specified keyword and excludes
+     * non-matching tasks.
+     */
     @Test
     void invalid_commands_show_error_messages() {
         // Invalid mark index
@@ -148,6 +180,10 @@ class RexTest {
         assertTrue(eventResponse.contains("Usage: event"));
     }
 
+    /**
+     * Tests that the "bye" command stops the application
+     * and produces the correct farewell message.
+     */
     @Test
     void bye_command_stops_running() {
         assertTrue(rex.isRunning());

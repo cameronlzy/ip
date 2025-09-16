@@ -302,16 +302,16 @@ public class Rex {
         final String args = Parser.getArguments(trimmed);
 
         switch (cmd) {
-            case "bye":      return handleBye();
-            case "list":     return handleList();
-            case "delete":   return handleDelete(args);
-            case "mark":     return handleMark(args);
-            case "unmark":   return handleUnmark(args);
-            case "todo":     return handleTodo(args);
-            case "deadline": return handleDeadline(args);
-            case "event":    return handleEvent(args);
-            case "find":     return handleFind(args);
-            default:         return UNKNOWN_COMMAND_MSG;
+        case "bye":      return handleBye();
+        case "list":     return handleList();
+        case "delete":   return handleDelete(args);
+        case "mark":     return handleMark(args);
+        case "unmark":   return handleUnmark(args);
+        case "todo":     return handleTodo(args);
+        case "deadline": return handleDeadline(args);
+        case "event":    return handleEvent(args);
+        case "find":     return handleFind(args);
+        default:         return UNKNOWN_COMMAND_MSG;
         }
     }
 
