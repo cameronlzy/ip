@@ -281,8 +281,12 @@ public class Rex {
      */
     private static Integer safeParseIndex(String s) {
         if (s == null || s.isBlank()) return null;
-        try { return Integer.parseInt(s.trim()); }
-        catch (NumberFormatException e) { return null; }
+        try {
+            return Integer.parseInt(s.trim());
+        }
+        catch (NumberFormatException e) {
+            return null;
+        }
     }
 
     /**
